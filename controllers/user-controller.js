@@ -49,21 +49,65 @@ const UserController = {
 
 
 		} catch (error) {
-			console.error(error);
+			console.error('Register error:', error);
 			res.status(500).json({ msg: `Щось пішло не так` })
 		}
 	},
+
 	login: async (req, res) => {
-		res.send('login')
+		try {
+			const { email, password } = req.body
+			if (!email || !password) {
+				return res.status(400).json({ msg: `Будь ласка, заповніть обов'язкові поля` })
+			}
+
+			const user = await prisma.user.findUnique({
+				where: {
+					email: email.toLowerCase()
+				}
+			})
+
+			if (!user) {
+				return res.status(404).json({ msg: `Логін або пароль введено невірно` });
+			}
+
+			const isPasswordCorrect = await bcrypt.compare(password, user.password)
+			if (!isPasswordCorrect) {
+				return res.status(404).json({ msg: `Логін або пароль введено невірно` });
+			}
+
+			const secret = process.env.JWT_SECRET;
+			const token = jwt.sign({ userId: user.id }, secret, { expiresIn: '1d' })
+
+			res.status(200).json({
+				id: user.id,
+				email: user.email,
+				name: user.name,
+				token: token
+			})
+
+		} catch (error) {
+			console.error('Login error:', error);
+			res.status(500).json({ msg: `Щось пішло не так` })
+		}
 	},
+
 	getUserById: async (req, res) => {
 		res.send('getUserById')
 	},
+
 	update: async (req, res) => {
 		res.send('update')
 	},
+
 	current: async (req, res) => {
-		res.send('current')
+		try {
+			return res.status(200).json(req.user)
+
+		} catch (error) {
+			console.error('Current error:', error);
+			res.status(500).json({ msg: `Щось пішло не так` })
+		}
 	},
 }
 
