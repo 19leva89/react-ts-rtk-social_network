@@ -7,12 +7,12 @@ const jwt = require('jsonwebtoken');
 
 const UserController = {
 	register: async (req, res) => {
-		try {
-			const { name, email, password } = req.body
-			if (!name || !email || !password) {
-				return res.status(400).json({ msg: `Будь ласка, заповніть обов'язкові поля` })
-			}
+		const { name, email, password } = req.body
+		if (!name || !email || !password) {
+			return res.status(400).json({ msg: `Будь ласка, заповніть обов'язкові поля` })
+		}
 
+		try {
 			const registredUser = await prisma.user.findUnique({
 				where: {
 					email: email.toLowerCase()
@@ -28,7 +28,7 @@ const UserController = {
 
 			const png = jdenticon.toPng(name, 200)
 			const avatarName = `${name}_${Date.now()}.png`
-			const avatarPath = path.join(__dirname, './../uploads', avatarName)
+			const avatarPath = path.join(__dirname, '../uploads', avatarName)
 			fs.writeFileSync(avatarPath, png)
 
 			const user = await prisma.user.create({
@@ -40,13 +40,7 @@ const UserController = {
 				}
 			})
 
-			return res.status(201).json({
-				id: user.id,
-				name: user.name,
-				email: user.email,
-				avatarUrl: user.avatarUrl,
-			})
-
+			res.status(200).json(user)
 
 		} catch (error) {
 			console.error('Register error:', error);
@@ -55,12 +49,12 @@ const UserController = {
 	},
 
 	login: async (req, res) => {
-		try {
-			const { email, password } = req.body
-			if (!email || !password) {
-				return res.status(400).json({ msg: `Будь ласка, заповніть обов'язкові поля` })
-			}
+		const { email, password } = req.body
+		if (!email || !password) {
+			return res.status(400).json({ msg: `Будь ласка, заповніть обов'язкові поля` })
+		}
 
+		try {
 			const user = await prisma.user.findUnique({
 				where: {
 					email: email.toLowerCase()
@@ -80,9 +74,6 @@ const UserController = {
 			const token = jwt.sign({ userId: user.id }, secret, { expiresIn: '1d' })
 
 			res.status(200).json({
-				id: user.id,
-				email: user.email,
-				name: user.name,
 				token: token
 			})
 
@@ -93,19 +84,117 @@ const UserController = {
 	},
 
 	getUserById: async (req, res) => {
-		res.send('getUserById')
+		const { id } = req.params
+		const userId = req.user.userId
+
+		try {
+			const user = await prisma.user.findUnique({
+				where: {
+					id: id
+				},
+				include: {
+					followers: true,
+					following: true
+				}
+			})
+
+			if (!user) {
+				return res.status(404).json({ msg: `Користувача не знайдено` });
+			}
+
+			const isFollowing = await prisma.follows.findFirst({
+				where: {
+					AND: [
+						{ followerId: userId },
+						{ followingId: id }
+					]
+				}
+			})
+
+			res.json({ ...user, isFollowing: Boolean(isFollowing) })
+
+		} catch (error) {
+			console.error('getUserById error:', error);
+			res.status(500).json({ msg: `Щось пішло не так` })
+		}
 	},
 
 	update: async (req, res) => {
-		res.send('update')
+		const { id } = req.params
+		const { email, name, dateOfBirth, bio, location } = req.body
+
+		let filePath
+
+		if (req.file && req.file.path) {
+			filePath = req.file.path
+		}
+
+		if (id !== req.user.userId) {
+			return res.status(403).json({ msg: `Немає доступу` })
+		}
+
+		try {
+			if (email) {
+				const existingUser = await prisma.user.findFirst({
+					where: {
+						email: email.toLowerCase()
+					}
+				})
+
+				if (existingUser && existingUser.id !== id) {
+					return res.status(400).json({ msg: `Пошта вже використовується` })
+				}
+			}
+
+			const user = await prisma.user.update({
+				where: {
+					id: id
+				},
+				data: {
+					email: email || undefined,
+					name: name || undefined,
+					avatarUrl: filePath ? `/${filePath}` : undefined,
+					dateOfBirth: dateOfBirth || undefined,
+					bio: bio || undefined,
+					location: location || undefined
+				}
+			})
+
+			res.json(user)
+
+		} catch (error) {
+			console.error('Update user error:', error);
+			res.status(500).json({ msg: `Щось пішло не так` })
+		}
 	},
 
 	current: async (req, res) => {
 		try {
-			return res.status(200).json(req.user)
+			const user = await prisma.user.findUnique({
+				where: {
+					id: req.user.userId
+				},
+				include: {
+					followers: {
+						include: {
+							follower: true
+						}
+					},
+					following: {
+						include: {
+							following: true
+						}
+					},
+				}
+			})
+
+			if (!user) {
+				return res.status(404).json({ msg: `Користувача не знайдено` });
+			}
+			return res.status(200).json(user)
 
 		} catch (error) {
-			console.error('Current error:', error);
+			console.error('Get current error:', error);
 			res.status(500).json({ msg: `Щось пішло не так` })
 		}
 	},

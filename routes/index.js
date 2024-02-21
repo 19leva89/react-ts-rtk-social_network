@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { UserController } = require('../controllers');
+const { UserController, PostController } = require('../controllers');
+const { authenticateToken } = require('../middleware/auth');
 
 const uploadDestination = 'uploads'
 
@@ -21,12 +22,24 @@ router.post('/register', UserController.register);
 router.post('/login', UserController.login);
 
 // /api/users/:id
-router.get('/users/:id', UserController.getUserById);
+router.get('/users/:id', authenticateToken, UserController.getUserById);
 
 // /api/users/:id
-router.put('/users/:id', UserController.update);
+router.put('/users/:id', authenticateToken, UserController.update);
 
 // /api/current
-router.get('/current', UserController.current);
+router.get('/current', authenticateToken, UserController.current);
+
+// /api/posts
+router.post('/posts', authenticateToken, PostController.createPost);
+
+// /api/posts
+router.get('/posts', authenticateToken, PostController.getAllPosts);
+
+// /api/posts/:id
+router.get('/posts/:id', authenticateToken, PostController.getPostById);
+
+// /api/posts/:id
+router.delete('/posts/:id', authenticateToken, PostController.deletePost);
 
 module.exports = router;
