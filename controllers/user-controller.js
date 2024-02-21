@@ -114,7 +114,7 @@ const UserController = {
 			res.json({ ...user, isFollowing: Boolean(isFollowing) })
 
 		} catch (error) {
-			console.error('getUserById error:', error);
+			console.error('Get user by ID error:', error);
 			res.status(500).json({ msg: `Щось пішло не так` })
 		}
 	},
