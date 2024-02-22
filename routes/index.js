@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { UserController, PostController } = require('../controllers');
+const { UserController, PostController, CommentController, LikeController, FollowController } = require('../controllers');
 const { authenticateToken } = require('../middleware/auth');
 
 const uploadDestination = 'uploads'
@@ -30,6 +30,8 @@ router.put('/users/:id', authenticateToken, UserController.update);
 // /api/current
 router.get('/current', authenticateToken, UserController.current);
 
+// ===========================================================================
+
 // /api/posts
 router.post('/posts', authenticateToken, PostController.createPost);
 
@@ -41,5 +43,29 @@ router.get('/posts/:id', authenticateToken, PostController.getPostById);
 
 // /api/posts/:id
 router.delete('/posts/:id', authenticateToken, PostController.deletePost);
+
+// ===========================================================================
+
+// /api/comments
+router.post('/comments', authenticateToken, CommentController.createComment);
+
+// /api/comments/:id
+router.delete('/comments/:id', authenticateToken, CommentController.deleteComment);
+
+// ===========================================================================
+
+// /api/likes
+router.post('/likes', authenticateToken, LikeController.likePost);
+
+// /api/unlikes/:id
+router.delete('/unlikes/:id', authenticateToken, LikeController.unlikePost);
+
+// ===========================================================================
+
+// /api/follows
+router.post('/follows', authenticateToken, FollowController.followUser);
+
+// /api/unfollows/:id
+router.delete('/unfollows/:id', authenticateToken, FollowController.unfollowUser);
 
 module.exports = router;

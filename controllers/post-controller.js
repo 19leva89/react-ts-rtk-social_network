@@ -93,6 +93,7 @@ const PostController = {
 
 	deletePost: async (req, res) => {
 		const { id } = req.params
+		const userId = req.user.userId
 
 		const post = await prisma.post.findUnique({
 			where: {
@@ -104,7 +105,7 @@ const PostController = {
 			return res.status(404).json({ msg: `Пост не знайдено` });
 		}
 
-		if (post.authorId !== req.user.userId) {
+		if (post.authorId !== userId) {
 			return res.status(403).json({ msg: `Немає доступу` });
 		}
 
