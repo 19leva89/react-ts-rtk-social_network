@@ -53,7 +53,7 @@ export type Comment = {
   postId: string
 }
 
-export type ErrorWithMessage = {
+export type ErrorWithMsg = {
   status: number
   data: {
     msg: string
