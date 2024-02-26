@@ -27,7 +27,7 @@ const UserController = {
 			const hashedPassword = await bcrypt.hash(password, salt)
 
 			const png = jdenticon.toPng(`${name}${Date.now()}`, 200)
-			const avatarName = `${name}_${Date.now()}.png`
+			const avatarName = `${name.replace(/\s/g, '_')}_${Date.now()}.png`
 			const avatarPath = path.join(__dirname, '/../uploads', avatarName)
 			fs.writeFileSync(avatarPath, png)
 

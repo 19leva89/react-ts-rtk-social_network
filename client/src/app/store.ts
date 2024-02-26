@@ -1,10 +1,19 @@
-import type { Action, ThunkAction } from "@reduxjs/toolkit"
-import { configureStore } from "@reduxjs/toolkit"
+import { configureStore, type Action, type ThunkAction } from "@reduxjs/toolkit"
+
 import { api } from "./services/api"
+import { listenerMiddleware } from "../middleware/auth"
+
+import user from "../features/user/userSlice"
 
 export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
+    user,
+  },
+  middleware: getDefaultMiddleware => {
+    return getDefaultMiddleware()
+      .concat(api.middleware)
+      .prepend(listenerMiddleware.middleware)
   },
 })
 
