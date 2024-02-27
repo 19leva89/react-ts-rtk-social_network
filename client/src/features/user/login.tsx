@@ -38,12 +38,12 @@ export const Login: React.FC<Props> = ({ setSelected }) => {
   const navigate = useNavigate()
   const [msg, setMsg] = React.useState("")
   const [login, { isLoading }] = useLoginMutation()
-  const [triggerCurrentQuery] = useLazyCurrentQuery()
+  const [triggerCurrent] = useLazyCurrentQuery()
 
   const onSubmit = async (data: LoginType) => {
     try {
       await login(data).unwrap()
-      await triggerCurrentQuery().unwrap()
+      await triggerCurrent().unwrap()
       navigate("/")
     } catch (error) {
       if (isErrorWithMsg(error)) {
@@ -70,7 +70,7 @@ export const Login: React.FC<Props> = ({ setSelected }) => {
         required="Обов'язкове поле"
       />
 
-      <MsgResponse msg={msg} />
+      {errors && <MsgResponse msg={msg} />}
 
       <p className="text-center text-small">
         Немає акаунту?{" "}

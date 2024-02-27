@@ -1,16 +1,13 @@
 import React from "react"
 import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
 
-import {
-  useLazyCurrentQuery,
-  useRegisterMutation,
-} from "../../app/services/userApi"
+import { useRegisterMutation } from "../../app/services/userApi"
 
 import { Input } from "../../components/input"
-import { Button, Link } from "@nextui-org/react"
-import { isErrorWithMsg } from "../../utils/is-error-with-msg"
 import { MsgResponse } from "../../components/msg-response"
+import { isErrorWithMsg } from "../../utils/is-error-with-msg"
+
+import { Button, Link } from "@nextui-org/react"
 
 type RegisterType = {
   name: string
@@ -37,9 +34,7 @@ export const Register: React.FC<Props> = ({ setSelected }) => {
     },
   })
 
-  const navigate = useNavigate()
   const [register, { isLoading }] = useRegisterMutation()
-  const [triggerCurrentQuery] = useLazyCurrentQuery()
   const [msg, setMsg] = React.useState("")
 
   const onSubmit = async (data: RegisterType) => {
@@ -79,7 +74,7 @@ export const Register: React.FC<Props> = ({ setSelected }) => {
         required="Обов'язкове поле"
       />
 
-      <MsgResponse msg={msg} />
+      {errors && <MsgResponse msg={msg} />}
 
       <p className="text-center text-small">
         Вже є акаунт?{" "}
