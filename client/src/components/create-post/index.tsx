@@ -12,7 +12,7 @@ import { isErrorWithMsg } from "../../utils/is-error-with-msg"
 import { IoMdCreate } from "react-icons/io"
 import { Button, Textarea } from "@nextui-org/react"
 
-export const PostCreate: React.FC = () => {
+export const CreatePost: React.FC = () => {
   const [msg, setMsg] = React.useState("")
   const [createPost, { isLoading }] = useCreatePostMutation()
   const [triggerGetAllPosts] = useLazyGetAllPostsQuery()

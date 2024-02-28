@@ -1,7 +1,7 @@
 import React from "react"
 
 import { useGetAllPostsQuery } from "../../app/services/postApi"
-import { PostCreate } from "../../components/post-create"
+import { CreatePost } from "../../components/create-post"
 import { Card } from "../../components/card"
 
 export const PostsPage = () => {
@@ -10,7 +10,7 @@ export const PostsPage = () => {
   return (
     <>
       <div className="mb-10 w-full">
-        <PostCreate />
+        <CreatePost />
       </div>
 
       {data && data.length > 0
