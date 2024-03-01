@@ -67,4 +67,4 @@ src/.DS_Store
 public/dist
 dist
 
-uploads
+# uploads

@@ -36,7 +36,7 @@ const UserController = {
 					name: name,
 					email: email.toLowerCase(),
 					password: hashedPassword,
-					avatarUrl: `/uploads/${avatarName}`
+					avatarUrl: `uploads/${avatarName}`
 				}
 			})
 
@@ -153,7 +153,7 @@ const UserController = {
 				data: {
 					email: email || undefined,
 					name: name || undefined,
-					avatarUrl: filePath ? `/${filePath}` : undefined,
+					avatarUrl: filePath ? filePath : undefined,
 					dateOfBirth: dateOfBirth || undefined,
 					bio: bio || undefined,
 					location: location || undefined

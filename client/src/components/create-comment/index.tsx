@@ -34,6 +34,8 @@ export const CreateComment: React.FC = () => {
     } catch (error) {
       if (isErrorWithMsg(error)) {
         setMsg(error.data.msg)
+      } else {
+        setMsg(error as string)
       }
     }
   })

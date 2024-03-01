@@ -25,7 +25,7 @@ router.post('/login', UserController.login);
 router.get('/users/:id', authenticateToken, UserController.getUserById);
 
 // /api/users/:id
-router.put('/users/:id', authenticateToken, UserController.update);
+router.put('/users/:id', authenticateToken, uploads.single('avatar'), UserController.update);
 
 // /api/current
 router.get('/current', authenticateToken, UserController.current);

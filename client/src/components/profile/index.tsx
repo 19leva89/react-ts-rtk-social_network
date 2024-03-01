@@ -1,10 +1,13 @@
 import type React from "react"
+import { Link } from "react-router-dom"
+
 import { useAppSelector } from "../../app/hooks"
 import { selectCurrent } from "../../features/user/userSlice"
-import { Card, CardBody, CardHeader, Image } from "@nextui-org/react"
+
 import { BASE_URL } from "../../utils/constants"
-import { Link } from "react-router-dom"
+
 import { MdAlternateEmail } from "react-icons/md"
+import { Card, CardBody, CardHeader, Image } from "@nextui-org/react"
 
 export const Profile: React.FC = () => {
   const current = useAppSelector(selectCurrent)
@@ -21,7 +24,7 @@ export const Profile: React.FC = () => {
         <Image
           alt="Card profile"
           className="object-cover rounded-xl"
-          src={`${BASE_URL}${avatarUrl}`}
+          src={`${BASE_URL}/${avatarUrl}`}
           width={370}
         />
       </CardHeader>
