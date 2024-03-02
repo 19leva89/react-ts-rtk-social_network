@@ -1,8 +1,7 @@
-import React from "react"
-
 import { useGetAllPostsQuery } from "../../app/services/postApi"
-import { CreatePost } from "../../components/create-post"
+
 import { Card } from "../../components/card"
+import { CreatePost } from "../../components/create-post"
 
 export const PostsPage = () => {
   const { data } = useGetAllPostsQuery()

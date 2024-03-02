@@ -3,8 +3,8 @@ import { Provider } from "react-redux"
 import { createRoot } from "react-dom/client"
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 
-import App from "./App"
 import { store } from "./app/store"
+import { AuthGuard } from "./features/user/authGuard"
 
 import { Layout } from "./components/layout"
 import { ThemeProvider } from "./components/theme"
@@ -18,15 +18,10 @@ import { UserProfilePage } from "./pages/user-profile"
 
 import { NextUIProvider } from "@nextui-org/react"
 import "./index.css"
-import { AuthGuard } from "./features/user/authGuard"
 
 const container = document.getElementById("root")
 
 const router = createBrowserRouter([
-  {
-    path: "/auth",
-    element: <AuthPage />,
-  },
   {
     path: "/",
     element: <Layout />,
@@ -52,6 +47,10 @@ const router = createBrowserRouter([
         element: <FollowingPage />,
       },
     ],
+  },
+  {
+    path: "/auth",
+    element: <AuthPage />,
   },
 ])
 

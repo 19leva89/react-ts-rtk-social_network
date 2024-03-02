@@ -15,6 +15,7 @@ type Props = {
     | "warning"
     | "danger"
     | undefined
+  onClick?: () => void
 }
 
 export const Button: React.FC<Props> = ({
@@ -24,6 +25,7 @@ export const Button: React.FC<Props> = ({
   type,
   fullWidth,
   color,
+  onClick,
 }) => {
   return (
     <NextButton
@@ -34,6 +36,7 @@ export const Button: React.FC<Props> = ({
       className={className}
       type={type}
       fullWidth={fullWidth}
+      onClick={onClick}
     >
       {children}
     </NextButton>
