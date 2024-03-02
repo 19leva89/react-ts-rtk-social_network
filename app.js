@@ -15,7 +15,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 // Роздавати статичні файли з папки uploads
 app.use('/uploads', express.static('uploads'))
