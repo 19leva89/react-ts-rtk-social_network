@@ -1,19 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
+const path = require('path');
 const { UserController, PostController, CommentController, LikeController, FollowController } = require('../controllers');
 const { authenticateToken } = require('../middleware/auth');
 
-const uploadDestination = 'uploads'
-
 const storage = multer.diskStorage({
-	destination: uploadDestination,
+	destination: 'uploads/',
 	filename: function (req, file, cb) {
-		cb(null, file.originalname)
+		const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
+		const fileExtension = path.extname(file.originalname);
+		const filename = `${uniqueSuffix}${fileExtension}`;
+		cb(null, filename)
 	}
 })
 
-const uploads = multer({ storage: storage })
+const upload = multer({ storage })
 
 // /api/register
 router.post('/register', UserController.register);
@@ -25,7 +27,7 @@ router.post('/login', UserController.login);
 router.get('/users/:id', authenticateToken, UserController.getUserById);
 
 // /api/users/:id
-router.put('/users/:id', authenticateToken, uploads.single('avatar'), UserController.update);
+router.put('/users/:id', authenticateToken, upload.single('avatar'), UserController.update);
 
 // /api/current
 router.get('/current', authenticateToken, UserController.current);
