@@ -8,8 +8,9 @@ This project contains the following technologies:
 - Tailwind CSS (stylization)
 - React Icons (stylization)
 
-- Express 4
-- Prisma 5 (ORM for DB)
+Server:
+- Express
+- Prisma (ORM for DB)
 - Bcrypt (password hashing)
 - Morgan (logger middleware)
 - Multer (uploading files)
