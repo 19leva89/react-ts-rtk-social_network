@@ -1,0 +1,16 @@
+This project contains the following technologies:
+- React 18
+- TypeScript
+- Redux Toolkit (data storage)
+- React Router 6 (navigation)
+- React Hook Form (working with forms)
+- Framer Motion (animating components)
+- Tailwind CSS (stylization)
+- React Icons (stylization)
+
+- Express 4
+- Prisma 5 (ORM for DB)
+- Bcrypt (password hashing)
+- Morgan (logger middleware)
+- Multer (uploading files)
+- Pug (templating engine HTML)
