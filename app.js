@@ -1,37 +1,62 @@
 const createError = require('http-errors');
 const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-const fs = require('fs');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const path = require('path');
+const fileURLToPath = require('url');
+const fs = require('fs');
+const logger = require('morgan');
+
+// Get __dirname for ES6 modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 require('dotenv').config()
-
 const app = express();
 
-app.use(cors());
+// Setting up CORS to work with cookies
+app.use(cors({
+	origin:
+		process.env.NODE_ENV === "production"
+			? "https://react-ts-rtk-vite-social-network.onrender.com"
+			: "http://localhost:3000",
+	credentials: true,
+}));
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Connecting cookie-parser
 app.use(cookieParser());
+
 app.set('view engine', 'pug');
 
-// Роздавати статичні файли з папки uploads
-app.use('/uploads', express.static('uploads'))
-
+// Routes
 app.use('/api', require('./routes'))
+
+// Setting up React static file serving
+app.use(express.static(path.join(__dirname, 'client', 'build')));
+
+// Setting up static distribution of uploaded files from the upload folder
+// https://your-domain/uploads/file_name
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 if (!fs.existsSync('uploads')) {
 	fs.mkdirSync('uploads')
 }
 
-// catch 404 and forward to error handler
+// For all other routes, we send index.html from build
+app.get('*', (req, res) => {
+	res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+});
+
+// Catch 404 and forward to error handler
 app.use(function (req, res, next) {
 	next(createError(404));
 });
 
-// error handler
+// Error handler
 app.use(function (err, req, res, next) {
 	// set locals, only providing error in development
 	res.locals.message = err.message;
