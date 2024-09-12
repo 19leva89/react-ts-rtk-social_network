@@ -1,11 +1,10 @@
-const createError = require('http-errors');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const fileURLToPath = require('url');
 const fs = require('fs');
 const logger = require('morgan');
+const createError = require('http-errors');
 
 require('dotenv').config()
 const app = express();
@@ -32,7 +31,7 @@ app.set('view engine', 'pug');
 app.use('/api', require('./routes'))
 
 // Setting up React static file serving
-app.use(express.static(path.join(__dirname, 'client', 'build')));
+app.use(express.static(path.join(__dirname, 'client', 'dist')));
 
 // Setting up static distribution of uploaded files from the upload folder
 // https://your-domain/uploads/file_name
@@ -44,7 +43,7 @@ if (!fs.existsSync('uploads')) {
 
 // For all other routes, we send index.html from build
 app.get('*', (req, res) => {
-	res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+	res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 });
 
 // Catch 404 and forward to error handler
