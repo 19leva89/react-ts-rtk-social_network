@@ -7,10 +7,6 @@ const fileURLToPath = require('url');
 const fs = require('fs');
 const logger = require('morgan');
 
-// Get __dirname for ES6 modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 require('dotenv').config()
 const app = express();
 
