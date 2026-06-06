@@ -67,4 +67,5 @@ src/.DS_Store
 public/dist
 dist
 
-# uploads
+# env files (can opt-in for committing if needed)
+.env*
